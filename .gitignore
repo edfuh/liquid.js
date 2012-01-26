@@ -2,7 +2,11 @@
 *.swp
 
 # Ignore generated distribution files
+dist
 dist/*.js
 
 # Ignore per machine install of jsmin
 bin/jsmin
+
+# Ignore mac crap
+.DS_Store
