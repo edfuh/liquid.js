@@ -3,11 +3,12 @@
  * MIT Licensed.
  */
 // Inspired by base2 and Prototype
+var Class;
 (function(){
   var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
 
   // The base Class implementation (does nothing)
-  this.Class = function(){};
+  Class = function(){};
  
   // Create a new Class that inherits from this class
   Class.extend = function(prop) {
@@ -44,22 +45,22 @@
     }
    
     // The dummy class constructor
-    function Class() {
+    function Klass() {
       // All construction is actually done in the init method
       if ( !initializing && this.init )
         this.init.apply(this, arguments);
     }
    
     // Populate our constructed prototype object
-    Class.prototype = prototype;
+    Klass.prototype = prototype;
    
     // Enforce the constructor to be what we expect
-    Class.prototype.constructor = Class;
+    Klass.prototype.constructor = Klass;
 
     // And make this class extendable
-    Class.extend = arguments.callee;
+    Klass.extend = arguments.callee;
    
-    return Class;
+    return Klass;
   };
 })();
 
