@@ -54,9 +54,13 @@ var Tests = (function() {
     '{{ varname }}': function() {
       assertEqual( 'Bob', render("{{ user }}", {user:'Bob'})  )
     },
-    
+
     '{{ parent.child }}': function() {
       assertEqual( 'Bob', render("{{ user.name }}", {user:{ name:'Bob' }})  )
+    },
+
+    'Empty string if child is undefined': function() {
+      assertEqual( '', render("{{ user.name }}", {user:{ fullname:'Bob' }})  )
     },
 
     '{{ collection[0] }}': function() {
@@ -100,6 +104,11 @@ var Tests = (function() {
       assertEqual( 'this &amp; &quot;that&quot;', render("{{ 'this & \"that\"' | escape }}")  )
     },
 
+    '{{ string | h }}': function() {
+      assertEqual( '&lt;br/&gt;', render("{{'<br/>'|escape}}")  )
+      assertEqual( '&lt;br/&gt;', render("{{ '<br/>' | escape }}")  )
+      assertEqual( 'this &amp; &quot;that&quot;', render("{{ 'this & \"that\"' | escape }}")  )
+    },
 
     '{{ string | truncate }}': function() {
       assertEqual( 

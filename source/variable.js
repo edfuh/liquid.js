@@ -40,6 +40,6 @@ Liquid.Variable = Class.extend({
       output = context.invoke(filterName, filterArgs);
     });
 
-    return output;
+    return (typeof output !== 'object' || typeof output.splice === 'function' ) ? output : '';
   }
 });
