@@ -265,9 +265,9 @@ Liquid.Template.registerTag( 'for', Liquid.Block.extend({
 
       limit = context.get( this.attributes['limit'] );
 
-      rangeEnd = (limit) ? offset + limit + 1 : collection.length;
-      range = [ offset, rangeEnd - 1 ];
-      
+      rangeEnd = (limit) ? offset + limit : collection.length;
+      range = [ offset, rangeEnd ];
+
       // Save the range end in the registers so that future calls to 
       // offset:continue have something to pick up
       context.registers['for'][this.name] = rangeEnd;

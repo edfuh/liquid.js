@@ -259,7 +259,32 @@ var Tests = (function() {
       assertEqual( "3", render("{{c|last}}", {c:[1,2,3]}) );
       assertEqual( "3", render("{{ c | last }}", {c:[1,2,3]}) );
     },
-    
+
+    "{% for item in collection | offset:int %}{% endfor %}": function() {
+      assertEqual("2345", render("{% for item in (1..5) | offset:1 %}{{ item }}{% endfor %}"));
+      assertEqual("345", render("{% for item in (1..5) | offset:2 %}{{ item }}{% endfor %}"));
+      assertEqual("123", render("{% for item in (1..5) | offset:2 %}{{ forloop.index }}{% endfor %}"));
+      assertEqual("012", render("{% for item in (1..5) | offset:2 %}{{ forloop.index0 }}{% endfor %}"));
+      assertEqual("truefalse", render("{% for item in (1..3) | offset:1 %}{{ forloop.first }}{% endfor %}"));
+      assertEqual("true", render("{% for item in (1..3) | offset:2 %}{{ forloop.last }}{% endfor %}"));
+    },
+
+    "{% for item in collection | limit:int %}{% endfor %}": function() {
+      assertEqual("1", render("{% for item in (1..5) | limit:1 %}{{ item }}{% endfor %}"));
+      assertEqual("12", render("{% for item in (1..5) | limit:2 %}{{ forloop.index }}{% endfor %}"));
+      assertEqual("12", render("{% for item in (1..5) | limit:2 %}{{ forloop.index }}{% endfor %}"));
+      assertEqual("01", render("{% for item in (1..5) | limit:2 %}{{ forloop.index0 }}{% endfor %}"));
+      assertEqual("1234", render("{% for item in (1..5) | limit:4 %}{{ forloop.index }}{% endfor %}"));
+    },
+
+    "{% for item in collection | offset:int limit:int %}{% endfor %}": function() {
+      assertEqual("2", render("{% for item in (1..5) | offset:1 limit:1 %}{{ item }}{% endfor %}"));
+      assertEqual("34", render("{% for item in (1..5) | offset:2 limit:2 %}{{ item }}{% endfor %}"));
+      assertEqual("12", render("{% for item in (1..5) | offset:2 limit:2 %}{{ forloop.index }}{% endfor %}"));
+      assertEqual("01", render("{% for item in (1..5) | offset:2 limit:2 %}{{ forloop.index0 }}{% endfor %}"));
+      assertEqual("1234", render("{% for item in (1..5) | offset:1 limit:4 %}{{ forloop.index }}{% endfor %}"));
+    },
+
     note3: "Testing tags...",
     
     "{% assign varname = value %}": function() {
