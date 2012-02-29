@@ -186,7 +186,7 @@ Liquid.Context = Class.extend({
           else if( (/^\d+$/).test(part) ) {
             var pos = parseInt(part);
             if( typeof(object[pos]) == 'function') { object[pos] = object[pos].apply(self); }
-            if(typeof(object[pos]) == 'object' && typeof(object[pos]) == 'object' && ('toLiquid' in object[pos])) { object = object[pos].toLiquid(); }
+            if(typeof(object[pos]) == 'object' && ('toLiquid' in object[pos])) { object = object[pos].toLiquid(); }
             else { object  = object[pos]; }
           }
           // Some special cases. If no key with the same name was found we interpret following calls
