@@ -214,12 +214,12 @@ var Tests = (function() {
       assertEqual( "3,2,1", render("{{ c | reverse }}", {c:[1,2,3]}) );
     },
 
-    "{{ string | relace:string }}": function() {
+    "{{ string | replace:string }}": function() {
       assertEqual( "bnns", render("{{'bananas'|replace:'a'}}") );
       assertEqual( "bnns", render("{{ 'bananas' | replace:'a' }}") );
     },
 
-    "{{ string | relace_first:string }}": function() {
+    "{{ string | replace_first:string }}": function() {
       assertEqual( "bnanas", render("{{'bananas'|replace_first:'a'}}") );
       assertEqual( "bnanas", render("{{ 'bananas' | replace_first:'a' }}") );
     },
