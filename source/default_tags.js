@@ -2,10 +2,12 @@ var hackObjectEach = function(fun /*, thisp*/) {
   if (typeof fun != "function")
     throw 'Object.each requires first argument to be a function';
 
-  var i = 0;
-  var thisp = arguments[1];
+  var i = 0,
+      thisp = arguments[1];
   for (var p in this) {
-    var value = this[p], pair = [p, value];
+    var value = this[p],
+      pair = [p, value];
+
     pair.key = p;
     pair.value = value;
     fun.call(thisp, pair, i, this);
@@ -228,10 +230,11 @@ Liquid.Template.registerTag( 'for', Liquid.Block.extend({
       this.attributes = {};
       var attrmarkup = markup.replace(this.tagSyntax, '');
       var attMatchs = markup.match(/(\w*?)\s*\:\s*("[^"]+"|'[^']+'|[^\s,|]+)/g);
+
       if(attMatchs) {
         attMatchs.each(function(pair){
           pair = pair.split(":");
-          this.attributes.set[pair[0].strip()] = pair[1].strip();
+          this.attributes[pair[0].strip()] = pair[1].strip();
         }, this);
       }
     } else {
@@ -245,22 +248,23 @@ Liquid.Template.registerTag( 'for', Liquid.Block.extend({
         output     = [],
         collection = (context.get(this.collectionName) || []),
         range      = [0, collection.length];
-    
+
     if(!context.registers['for']){ context.registers['for'] = {}; }
-    
+
     if(this.attributes['limit'] || this.attributes['offset']) {
       var offset   = 0,
           limit    = 0,
           rangeEnd = 0,
           segment = null;
-      
-      if(this.attributes['offset'] == 'continue') 
-        { offset = context.registers['for'][this.name]; }
-      else
-        { offset = context.get( this.attributes['offset'] ) || 0; }
-      
+
+      if(this.attributes['offset'] == 'continue') {
+        offset = context.registers['for'][this.name];
+      } else {
+        offset = context.get( this.attributes['offset'] ) || 0;
+      }
+
       limit = context.get( this.attributes['limit'] );
-      
+
       rangeEnd = (limit) ? offset + limit + 1 : collection.length;
       range = [ offset, rangeEnd - 1 ];
       
