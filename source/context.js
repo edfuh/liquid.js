@@ -1,4 +1,3 @@
-
 Liquid.Context = Class.extend({
 
   init: function(assigns, registers, rethrowErrors) {
@@ -185,21 +184,21 @@ Liquid.Context = Class.extend({
           }
           // Array
           else if( (/^\d+$/).test(part) ) {
-            pos = parseInt(part);
+            var pos = parseInt(part);
             if( typeof(object[pos]) == 'function') { object[pos] = object[pos].apply(self); }
             if(typeof(object[pos]) == 'object' && typeof(object[pos]) == 'object' && ('toLiquid' in object[pos])) { object = object[pos].toLiquid(); }
             else { object  = object[pos]; }
           }
           // Some special cases. If no key with the same name was found we interpret following calls
-          // as commands and call them on the current object
-          else if( typeof(object[part]) == 'function' && ['length', 'size', 'first', 'last'].include(part) ) {
+          // as commands and call them on the current object if it exists
+          else if( object && typeof(object[part]) == 'function' && ['length', 'size', 'first', 'last'].include(part) ) {
             object = object[part].apply(part);
             if('toLiquid' in object){ object = object.toLiquid(); }
           }
           // No key was present with the desired value and it wasn't one of the directly supported
           // keywords either. The only thing we got left is to return nil
           else {
-            return null;
+            return object = null;
           }
           if(typeof(object) == 'object' && ('setContext' in object)){ object.setContext(self); }
         }
