@@ -27,7 +27,7 @@ Liquid.Variable = Class.extend({
       }
     }
   },
-  
+
   render: function(context) {
     if(this.name == null){ return ''; }
     var output = context.get(this.name);
@@ -40,6 +40,7 @@ Liquid.Variable = Class.extend({
       output = context.invoke(filterName, filterArgs);
     });
 
-    return (typeof output !== 'object' || typeof output.splice === 'function' ) ? output : '';
+    // return (typeof output !== 'object' || typeof output.splice === 'function' ) ? output : '';
+    return (output != null) ? output : '';
   }
 });
