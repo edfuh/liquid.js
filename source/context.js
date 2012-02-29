@@ -7,36 +7,36 @@ Liquid.Context = Class.extend({
     this.rethrowErrors = rethrowErrors;
     this.strainer = Liquid.Strainer.create(this);
   },
-  
+
   get: function(varname) {
     return this.resolve(varname);
   },
-  
+
   set: function(varname, value) {
     this.scopes[0][varname] = value;
   },
-  
+
   hasKey: function(key) {
     return (this.resolve(key)) ? true : false;
   },
-  
+
   push: function() {
     var scpObj = {};
     this.scopes.unshift(scpObj);
     return scpObj // Is this right?
   },
-  
+
   merge: function(newScope) {
-    // HACK Apply from Liquid.extensions.object; extending Object sad. 
+    // HACK Apply from Liquid.extensions.object; extending Object sad.
     //return this.scopes[0].update(newScope);
     return Liquid.extensions.object.update.call(this.scopes[0], newScope);
   },
-  
+
   pop: function() {
     if(this.scopes.length == 1){ throw "Context stack error"; }
     return this.scopes.shift();
   },
-  
+
   stack: function(lambda, bind) {
     var result = null;
     this.push();
@@ -47,7 +47,7 @@ Liquid.Context = Class.extend({
     }
     return result;
   },
-  
+
   invoke: function(method, args) {
     if( this.strainer.respondTo(method) ) {
       // console.log('found method '+ method);
@@ -60,7 +60,7 @@ Liquid.Context = Class.extend({
       return (args.length == 0) ? null : args[0]; // was: $pick
     }
   },
-  
+
   resolve: function(key) {
     switch(key) {
       case null:
@@ -68,33 +68,33 @@ Liquid.Context = Class.extend({
       case 'null':
       case '':
         return null;
-      
+
       case 'true':
         return true;
-        
+
       case 'false':
         return false;
-      
+
       // Not sure what to do with (what would be) Symbols
       case 'blank':
       case 'empty':
         return '';
-      
+
       default:
         if((/^'(.*)'$/).test(key))      // Single quoted strings
           { return key.replace(/^'(.*)'$/, '$1'); }
-          
+
         else if((/^"(.*)"$/).test(key)) // Double quoted strings
           { return key.replace(/^"(.*)"$/, '$1'); }
-          
+
         else if((/^(\d+)$/).test(key)) // Integer...
           { return parseInt( key.replace(/^(\d+)$/ , '$1') ); }
-          
+
         else if((/^(\d[\d\.]+)$/).test(key)) // Float...
           { return parseFloat( key.replace(/^(\d[\d\.]+)$/, '$1') ); }
-          
-        else if((/^\((\S+)\.\.(\S+)\)$/).test(key)) {// Ranges 
-          // JavaScript doesn't have native support for those, so I turn 'em 
+
+        else if((/^\((\S+)\.\.(\S+)\)$/).test(key)) {// Ranges
+          // JavaScript doesn't have native support for those, so I turn 'em
           // into an array of integers...
           var range = key.match(/^\((\S+)\.\.(\S+)\)$/),
               left  = parseInt(range[1]),
@@ -102,38 +102,38 @@ Liquid.Context = Class.extend({
               arr   = [];
           // Check if left and right are NaN, if so try as characters
           if (isNaN(left) || isNaN(right)) {
-            // TODO Add in error checking to make sure ranges are single 
+            // TODO Add in error checking to make sure ranges are single
             // character, A-Z or a-z, etc.
             left = range[1].charCodeAt(0);
             right = range[2].charCodeAt(0);
 
             var limit = right-left+1;
-            for (var i=0; i<limit; i++) arr.push(String.fromCharCode(i+left)); 
+            for (var i=0; i<limit; i++) arr.push(String.fromCharCode(i+left));
           } else { // okay to make array
             var limit = right-left+1;
-            for (var i=0; i<limit; i++) arr.push(i+left); 
+            for (var i=0; i<limit; i++) arr.push(i+left);
           }
           return arr;
         } else {
           var result = this.variable(key);
           // console.log("Finding variable: "+ key)
           // console.log(Object.inspect(result))
-          return result; 
+          return result;
         }
     }
   },
-  
+
   findVariable: function(key) {
     for (var i=0; i < this.scopes.length; i++) {
       var scope = this.scopes[i];
       if( scope && !!scope[key] ) {
         var variable = scope[key];
         if(typeof(variable) == 'function'){
-          variable = variable.apply(this); 
+          variable = variable.apply(this);
           scope[key] = variable;
         }
         if(variable && typeof(variable) == 'object' && ('toLiquid' in variable)) {
-          variable = variable.toLiquid(); 
+          variable = variable.toLiquid();
         }
         if(variable && typeof(variable) == 'object' && ('setContext' in variable)){
           variable.setContext(self);
@@ -144,21 +144,22 @@ Liquid.Context = Class.extend({
 //    console.log('findVariable("'+ key +'") is returning NULL')
     return null;
   },
-  
+
   variable: function(markup) {
     //return this.scopes[0][key] || ''
     if(typeof markup != 'string') {
     //  console.log('markup('+ Object.inspect(markup) +') was unexpected, returning NULL')
       return null;
     }
-      
+
     var parts       = markup.match( /\[[^\]]+\]|(?:[\w\-]\??)+/g ),
         firstPart   = parts.shift(),
         squareMatch = firstPart.match(/^\[(.*)\]$/);
 
-    if(squareMatch)
-      { firstPart = this.resolve( squareMatch[1] ); }
-    
+    if (squareMatch) {
+      firstPart = this.resolve( squareMatch[1] );
+    }
+
     var object = this.findVariable(firstPart),
         self = this;
 
@@ -170,24 +171,38 @@ Liquid.Context = Class.extend({
         if(squareMatch) {
           var part = self.resolve( squareMatch[1] );
           // Where the hell does 'pos' come from?
-          if( typeof(object[part]) == 'function'){ object[part] = object[part].apply(this); }// Array?
+          if (typeof(object[part]) == 'function'){
+            object[part] = object[part].apply(this); // Array?
+          }
           object = object[part];
-          if(typeof(object) == 'object' && ('toLiquid' in object)){ object = object.toLiquid(); }
+          if (typeof(object) == 'object' && ('toLiquid' in object)) {
+            object = object.toLiquid();
+          }
         } else {
           // Hash
           if( (typeof(object) == 'object' || typeof(object) == 'hash') && (part in object)) {
             // if its a proc we will replace the entry in the hash table with the proc
             var res = object[part];
-            if( typeof(res) == 'function'){ res = object[part] = res.apply(self) ; }
-            if( typeof(res) == 'object' && ('toLiquid' in res)){ object = res.toLiquid(); }
-            else { object = res; }
+            if (typeof(res) == 'function') {
+              res = object[part] = res.apply(self);
+            }
+            if (typeof(res) == 'object' && ('toLiquid' in res)) {
+              object = res.toLiquid();
+            } else {
+              object = res;
+            }
           }
           // Array
           else if( (/^\d+$/).test(part) ) {
             var pos = parseInt(part);
-            if( typeof(object[pos]) == 'function') { object[pos] = object[pos].apply(self); }
-            if(typeof(object[pos]) == 'object' && ('toLiquid' in object[pos])) { object = object[pos].toLiquid(); }
-            else { object  = object[pos]; }
+            if (typeof(object[pos]) == 'function') {
+              object[pos] = object[pos].apply(self);
+            }
+            if (typeof(object[pos]) == 'object' && ('toLiquid' in object[pos])) {
+              object = object[pos].toLiquid();
+            } else {
+              object = object[pos];
+            }
           }
           // Some special cases. If no key with the same name was found we interpret following calls
           // as commands and call them on the current object if it exists
@@ -206,7 +221,7 @@ Liquid.Context = Class.extend({
     }
     return object;
   },
-  
+
   addFilters: function(filters) {
     filters = filters.flatten();
     filters.each(function(f){
@@ -214,7 +229,7 @@ Liquid.Context = Class.extend({
       this.strainer.addMethods(f);
     });
   },
-  
+
   handleError: function(err) {
     this.errors.push(err);
     if(this.rethrowErrors){ throw err; }
