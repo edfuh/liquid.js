@@ -144,7 +144,7 @@ Liquid.Template.registerTag( 'case', Liquid.Block.extend({
     }
   },
   recordElseCondition: function(markup) {
-    if( (markup || '').strip() != '') {
+    if( (markup || '').trim() != '') {
       throw ("Syntax error in tag 'case' - Valid else condition: {% else %} (no parameters) ")
     }
     var block = new Liquid.ElseCondition();
@@ -234,7 +234,7 @@ Liquid.Template.registerTag( 'for', Liquid.Block.extend({
       if(attMatchs) {
         attMatchs.each(function(pair){
           pair = pair.split(":");
-          this.attributes[pair[0].strip()] = pair[1].strip();
+          this.attributes[pair[0].trim()] = pair[1].trim();
         }, this);
       }
     } else {
@@ -396,7 +396,7 @@ Liquid.Template.registerTag( 'include', Liquid.Tag.extend({
       if(attMatchs) {
         attMatchs.each(function(pair){
           pair = pair.split(":");
-          this.attributes[pair[0].strip()] = pair[1].strip();
+          this.attributes[pair[0].trim()] = pair[1].trim();
         }, this);
       }
     } else {

@@ -100,7 +100,6 @@ if (!Array.prototype.include) {
   };
 }
 
-
 // String.capitalize
 if (!String.prototype.capitalize) {
   String.prototype.capitalize = function() {
@@ -108,10 +107,9 @@ if (!String.prototype.capitalize) {
   };
 }
 
-// String.strip
-if (!String.prototype.strip) {
-  String.prototype.strip = function() {
-    return this.replace(/^\s+/, '').replace(/\s+$/, '');
+if (!String.prototype.trim) {
+  String.prototype.trim = function () {
+    return this.replace(/^\s+|\s+$/g,'');
   };
 }
 
