@@ -4,7 +4,7 @@ if (!Array.prototype.indexOf) {
     for (var i=0; i<this.length; i++) {
       if (this[i] == obj) return i;
     }
-    
+
     return -1;
   };
 }
@@ -70,8 +70,8 @@ if (!Array.prototype.flatten) {
 }
 
 // Array.each
-if (!Array.prototype.each) {
-  Array.prototype.each = function(fun /*, thisp*/) {
+if (!Array.prototype.forEach) {
+  Array.prototype.forEach = function(fun /*, thisp*/) {
     var len = this.length;
     if (typeof fun != "function")
       throw 'Array.each requires first argument to be a function';

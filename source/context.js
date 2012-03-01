@@ -165,7 +165,7 @@ Liquid.Context = Class.extend({
 
     // Does 'pos' need to be scoped up here?
     if(object) {
-      parts.each(function(part){
+      parts.forEach(function(part){
         // If object is a hash we look for the presence of the key and if its available we return it
         var squareMatch = part.match(/^\[(.*)\]$/);
         if(squareMatch) {
@@ -224,7 +224,7 @@ Liquid.Context = Class.extend({
 
   addFilters: function(filters) {
     filters = filters.flatten();
-    filters.each(function(f){
+    filters.forEach(function(f){
       if(typeof(f) != 'object'){ throw ("Expected object but got: "+ typeof(f)) }
       this.strainer.addMethods(f);
     });

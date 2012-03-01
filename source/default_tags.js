@@ -232,7 +232,7 @@ Liquid.Template.registerTag( 'for', Liquid.Block.extend({
       var attMatchs = markup.match(/(\w*?)\s*\:\s*("[^"]+"|'[^']+'|[^\s,|]+)/g);
 
       if(attMatchs) {
-        attMatchs.each(function(pair){
+        attMatchs.forEach(function(pair){
           pair = pair.split(":");
           this.attributes[pair[0].trim()] = pair[1].trim();
         }, this);
@@ -280,7 +280,7 @@ Liquid.Template.registerTag( 'for', Liquid.Block.extend({
     context.stack(function(){
       var length = segment.length;
       
-      segment.each(function(item, index){
+      segment.forEach(function(item, index){
         context.set( self.variableName, item );
         context.set( 'forloop', {
           name:   self.name,
@@ -394,7 +394,7 @@ Liquid.Template.registerTag( 'include', Liquid.Tag.extend({
 
       var attMatchs = markup.match(/(\w*?)\s*\:\s*("[^"]+"|'[^']+'|[^\s,|]+)/g);
       if(attMatchs) {
-        attMatchs.each(function(pair){
+        attMatchs.forEach(function(pair){
           pair = pair.split(":");
           this.attributes[pair[0].trim()] = pair[1].trim();
         }, this);
