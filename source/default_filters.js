@@ -19,37 +19,31 @@ Liquid.Template.registerFilter({
   
   escape: function(input) {
     // FIXME: properly HTML escape input...
-    input = input.toString();
-    input = input.replace(/&/g, '&amp;');
-    input = input.replace(/</g, '&lt;');
-    input = input.replace(/>/g, '&gt;');
-    input = input.replace(/"/g, '&quot;');
-    return input;
+    return input.toString()
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
   },
   
-  h: function(input) {
-    // FIXME: properly HTML escape input...
-    input = input.toString();
-    input = input.replace(/&/g, '&amp;');
-    input = input.replace(/</g, '&lt;');
-    input = input.replace(/>/g, '&gt;');
-    input = input.replace(/"/g, '&quot;');
-    return input;
-  },
+  h: this.escape,
   
   truncate: function(input, length, string) {
-    if(!input || input == ''){ return ''; }
+    if (!input){
+      return '';
+    }
     length = length || 50;
     string = string || "...";
 
-    var seg = input.slice(0, length);
     return (input.length > length ?
             input.slice(0, length) + string : 
             input);
   },
   
   truncatewords: function(input, words, string) {
-    if(!input || input == ''){ return ''; }
+    if (!input || input == ''){
+      return '';
+    }
     words = parseInt(words || 15);
     string = string || '...';
     var wordlist = input.toString().split(" "),
@@ -58,7 +52,9 @@ Liquid.Template.registerFilter({
   },
 
   truncate_words: function(input, words, string) {
-    if(!input || input == ''){ return ''; }
+    if (!input || input == ''){
+      return '';
+    }
     words = parseInt(words || 15);
     string = string || '...';
     var wordlist = input.toString().split(" "),
@@ -75,7 +71,7 @@ Liquid.Template.registerFilter({
   },
   
   join: function(input, separator) {
-    separator = separator ||  ' ';
+    separator = separator || ' ';
     return input.join(separator);
   },
   
@@ -116,7 +112,6 @@ Liquid.Template.registerFilter({
   },
   
   last: function(input) {
-    input = input;
     return input[input.length -1];
   }
 });
