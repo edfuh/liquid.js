@@ -1,25 +1,25 @@
 Liquid.Block = Liquid.Tag.extend({
-  
+
   init: function(tagName, markup, tokens){
     this.blockName = tagName;
     this.blockDelimiter = "end"+ this.blockName;
     this._super(tagName, markup, tokens);
   },
-  
+
   parse: function(tokens) {
-    // NOTE Don't just blindly re-initialize nodelist; inherited classes may 
-    // share this through pointers; specifically If points _nodelist at the 
+    // NOTE Don't just blindly re-initialize nodelist; inherited classes may
+    // share this through pointers; specifically If points _nodelist at the
     // blocks attachment, so we need to leave that pointer to pickup stuff.
     if (!this.nodelist) this.nodelist = [];
     this.nodelist.clear();
-    
+
     var token = tokens.shift();
     tokens.push(''); // To ensure we don't lose the last token passed in...
-    while(tokens.length) { 
+    while(tokens.length) {
 
       if( /^\{\%/.test(token) ) { // It's a tag...
         var tagParts = token.match(/^\{\%\s*(\w+)\s*(.*)?\%\}$/);
-        
+
         if(tagParts) {
           // if we found the proper block delimitor just end parsing here and let the outer block proceed
           if( this.blockDelimiter == tagParts[1] ) {
@@ -41,13 +41,13 @@ Liquid.Block = Liquid.Tag.extend({
       } // Ignores tokens that are empty
       token = tokens.shift(); // Assign the next token to loop again...
     }
-    
-    // Effectively this method will throw and exception unless the current block is of type Document 
+
+    // Effectively this method will throw and exception unless the current block is of type Document
     this.assertMissingDelimitation();
   },
-  
+
   endTag: function() {},
-  
+
   unknownTag: function(tag, params, tokens) {
     switch(tag) {
       case 'else': throw (this.blockName +" tag does not expect else tag"); break;
@@ -55,17 +55,17 @@ Liquid.Block = Liquid.Tag.extend({
       default:     throw ("Unknown tag: "+ tag);
     }
   },
-  
+
   createVariable: function(token) {
     var match = token.match(/^\{\{(.*)\}\}$/);
     if(match) { return new Liquid.Variable(match[1]); }
     else { throw ("Variable '"+ token +"' was not properly terminated with: }}"); }
   },
-  
+
   render: function(context) {
     return this.renderAll(this.nodelist, context);
   },
-  
+
   renderAll: function(list, context) {
     return (list || []).map(function(token, i){
       var output = '';
@@ -77,7 +77,7 @@ Liquid.Block = Liquid.Tag.extend({
       return output;
     });
   },
-  
+
   assertMissingDelimitation: function(){
     throw (this.blockName +" tag was never closed");
   }

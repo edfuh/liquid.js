@@ -3,7 +3,7 @@ Liquid.Drop = Class.extend({
     this.context = context;
   },
   beforeMethod: function(method) {
-    
+
   },
   invokeDrop: function(method) {
     var results = this.beforeMethod();

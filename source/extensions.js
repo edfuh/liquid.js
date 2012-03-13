@@ -114,8 +114,8 @@ if (!String.prototype.trim) {
 }
 
 
-// NOTE Having issues conflicting with jQuery stuff when setting Object 
-// prototype settings; instead add into Liquid.Object.extensions and use in 
+// NOTE Having issues conflicting with jQuery stuff when setting Object
+// prototype settings; instead add into Liquid.Object.extensions and use in
 // the particular location; can add into Object.prototype later if we want.
 Liquid.extensions = {};
 Liquid.extensions.object = {};

@@ -20,15 +20,15 @@
     readTemplateFile: function(path) {
       throw ("This liquid context does not allow includes.");
     },
-  
+
     registerFilters: function(filters) {
       Liquid.Template.registerFilter(filters);
     },
-  
+
     parse: function(src) {
       return Liquid.Template.parse(src);
     }
-  
+
   };
 
   //= require "extensions"

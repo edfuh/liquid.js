@@ -3,7 +3,7 @@ Liquid.Strainer = Class.extend({
   init: function(context) {
     this.context = context;
   },
-  
+
   respondTo: function(methodName) {
     methodName = methodName.toString();
     if (methodName.match(/^__/)) return false;
@@ -21,7 +21,7 @@ Liquid.Strainer.globalFilter = function(filters) {
 }
 
 // Array of methods to keep...
-Liquid.Strainer.requiredMethods = ['respondTo', 'context']; 
+Liquid.Strainer.requiredMethods = ['respondTo', 'context'];
 
 Liquid.Strainer.create = function(context) {
   var strainer = new Liquid.Strainer(context);
