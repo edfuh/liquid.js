@@ -180,7 +180,7 @@ Liquid.Context = Class.extend({
           }
         } else {
           // Hash
-          if( (typeof(object) == 'object' || typeof(object) == 'hash') && (part in object)) {
+          if( (typeof(object) == 'object') && (part in object)) {
             // if its a proc we will replace the entry in the hash table with the proc
             var res = object[part];
             if (typeof(res) == 'function') {

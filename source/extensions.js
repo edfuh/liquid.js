@@ -69,7 +69,7 @@ if (!Array.prototype.flatten) {
   };
 }
 
-// Array.each
+// Array.forEach
 if (!Array.prototype.forEach) {
   Array.prototype.forEach = function(fun /*, thisp*/) {
     var len = this.length;
