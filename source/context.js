@@ -1,6 +1,6 @@
 Liquid.Context = Class.extend({
 
-  init: function(assigns, registers, rethrowErrors) {
+  init: function (assigns, registers, rethrowErrors) {
     this.scopes = [ assigns ? assigns : {} ];
     this.registers = registers ? registers : {};
     this.errors = [];
@@ -8,36 +8,38 @@ Liquid.Context = Class.extend({
     this.strainer = Liquid.Strainer.create(this);
   },
 
-  get: function(varname) {
+  get: function (varname) {
     return this.resolve(varname);
   },
 
-  set: function(varname, value) {
+  set: function (varname, value) {
     this.scopes[0][varname] = value;
   },
 
-  hasKey: function(key) {
+  hasKey: function (key) {
     return (this.resolve(key)) ? true : false;
   },
 
-  push: function() {
+  push: function () {
     var scpObj = {};
     this.scopes.unshift(scpObj);
-    return scpObj // Is this right?
+    return scpObj; // Is this right?
   },
 
-  merge: function(newScope) {
+  merge: function (newScope) {
     // HACK Apply from Liquid.extensions.object; extending Object sad.
     //return this.scopes[0].update(newScope);
     return Liquid.extensions.object.update.call(this.scopes[0], newScope);
   },
 
-  pop: function() {
-    if(this.scopes.length == 1){ throw "Context stack error"; }
+  pop: function () {
+    if (this.scopes.length === 1) {
+      throw "Context stack error";
+    }
     return this.scopes.shift();
   },
 
-  stack: function(lambda, bind) {
+  stack: function (lambda, bind) {
     var result = null;
     this.push();
     try {
@@ -48,8 +50,8 @@ Liquid.Context = Class.extend({
     return result;
   },
 
-  invoke: function(method, args) {
-    if( this.strainer.respondTo(method) ) {
+  invoke: function (method, args) {
+    if ( this.strainer.respondTo(method) ) {
       // console.log('found method '+ method);
       // console.log("INVOKE: "+ method);
       // console.log('args', args);
@@ -57,12 +59,12 @@ Liquid.Context = Class.extend({
       // console.log("result: "+ result);
       return result;
     } else {
-      return (args.length == 0) ? null : args[0]; // was: $pick
+      return (args.length === 0) ? null : args[0]; // was: $pick
     }
   },
 
-  resolve: function(key) {
-    switch(key) {
+  resolve: function (key) {
+    switch (key) {
       case null:
       case 'nil':
       case 'null':
@@ -81,19 +83,19 @@ Liquid.Context = Class.extend({
         return '';
 
       default:
-        if((/^'(.*)'$/).test(key))      // Single quoted strings
+        if ((/^'(.*)'$/).test(key))      // Single quoted strings
           { return key.replace(/^'(.*)'$/, '$1'); }
 
-        else if((/^"(.*)"$/).test(key)) // Double quoted strings
+        else if ((/^"(.*)"$/).test(key)) // Double quoted strings
           { return key.replace(/^"(.*)"$/, '$1'); }
 
-        else if((/^(\d+)$/).test(key)) // Integer...
+        else if ((/^(\d+)$/).test(key)) // Integer...
           { return parseInt( key.replace(/^(\d+)$/ , '$1') ); }
 
-        else if((/^(\d[\d\.]+)$/).test(key)) // Float...
+        else if ((/^(\d[\d\.]+)$/).test(key)) // Float...
           { return parseFloat( key.replace(/^(\d[\d\.]+)$/, '$1') ); }
 
-        else if((/^\((\S+)\.\.(\S+)\)$/).test(key)) {// Ranges
+        else if ((/^\((\S+)\.\.(\S+)\)$/).test(key)) {// Ranges
           // JavaScript doesn't have native support for those, so I turn 'em
           // into an array of integers...
           var range = key.match(/^\((\S+)\.\.(\S+)\)$/),
@@ -107,11 +109,11 @@ Liquid.Context = Class.extend({
             left = range[1].charCodeAt(0);
             right = range[2].charCodeAt(0);
 
-            var limit = right-left+1;
-            for (var i=0; i<limit; i++) arr.push(String.fromCharCode(i+left));
+            var limit = right - left + 1;
+            for (var i = 0; i < limit; i++) arr.push(String.fromCharCode(i + left));
           } else { // okay to make array
-            var limit = right-left+1;
-            for (var i=0; i<limit; i++) arr.push(i+left);
+            var limit = right - left + 1;
+            for (var i = 0; i < limit; i++) arr.push(i + left);
           }
           return arr;
         } else {
@@ -123,116 +125,127 @@ Liquid.Context = Class.extend({
     }
   },
 
-  findVariable: function(key) {
-    for (var i=0; i < this.scopes.length; i++) {
+  findVariable: function (key) {
+    for (var i = 0; i < this.scopes.length; i++) {
       var scope = this.scopes[i];
-      if( scope && !!scope[key] ) {
+      if ( scope && !!scope[key] ) {
         var variable = scope[key];
-        if(typeof(variable) == 'function'){
+        if (typeof(variable) === 'function') {
           variable = variable.apply(this);
           scope[key] = variable;
         }
-        if(variable && typeof(variable) == 'object' && ('toLiquid' in variable)) {
-          variable = variable.toLiquid();
-        }
-        if(variable && typeof(variable) == 'object' && ('setContext' in variable)){
-          variable.setContext(self);
+        if (variable && typeof(variable) === 'object') {
+          if (variable.toLiquid) {
+            variable = variable.toLiquid();
+          }
+          if (variable.setContext) {
+            variable.setContext(self);
+          }
         }
         return variable;
       }
-    };
+    }
 //    console.log('findVariable("'+ key +'") is returning NULL')
     return null;
   },
 
-  variable: function(markup) {
+  variable: function (markup) {
     //return this.scopes[0][key] || ''
-    if(typeof markup != 'string') {
+    if (typeof markup !== 'string') {
     //  console.log('markup('+ Object.inspect(markup) +') was unexpected, returning NULL')
       return null;
     }
 
-    var parts       = markup.match( /\[[^\]]+\]|(?:[\w\-]\??)+/g ),
+    var self        = this,
+        parts       = markup.match( /\[[^\]]+\]|(?:[\w\-]\??)+/g ),
         firstPart   = parts.shift(),
-        squareMatch = firstPart.match(/^\[(.*)\]$/);
+        squareMatch = firstPart.match(/^\[(.*)\]$/),
+        object;
 
     if (squareMatch) {
       firstPart = this.resolve( squareMatch[1] );
     }
 
-    var object = this.findVariable(firstPart),
-        self = this;
+    object = this.findVariable(firstPart);
 
     // Does 'pos' need to be scoped up here?
-    if(object) {
-      parts.forEach(function(part){
+    if (object) {
+      parts.forEach(function (part) {
         // If object is a hash we look for the presence of the key and if its available we return it
         var squareMatch = part.match(/^\[(.*)\]$/);
-        if(squareMatch) {
+        if (squareMatch) {
           var part = self.resolve( squareMatch[1] );
-          // Where the hell does 'pos' come from?
-          if (typeof(object[part]) == 'function'){
+          if (typeof(object[part]) === 'function') {
             object[part] = object[part].apply(this); // Array?
           }
           object = object[part];
-          if (typeof(object) == 'object' && ('toLiquid' in object)) {
+          if (object != null && typeof(object) === 'object' && object.toLiquid) {
             object = object.toLiquid();
           }
         } else {
           // Hash
-          if( (typeof(object) == 'object') && (part in object)) {
+          if ( typeof(object) === 'object' && (part in object) ) {
             // if its a proc we will replace the entry in the hash table with the proc
             var res = object[part];
-            if (typeof(res) == 'function') {
+            if (typeof(res) === 'function') {
               res = object[part] = res.apply(self);
             }
-            if (typeof(res) == 'object' && ('toLiquid' in res)) {
+            if ( res != null && typeof(res) === 'object' && res.toLiquid ) {
               object = res.toLiquid();
             } else {
               object = res;
             }
           }
           // Array
-          else if( (/^\d+$/).test(part) ) {
-            var pos = parseInt(part);
-            if (typeof(object[pos]) == 'function') {
-              object[pos] = object[pos].apply(self);
+          else if ( (/^\d+$/).test(part) ) {
+            var index = parseInt(part, 10);
+            if (typeof(object[index]) === 'function') {
+              object[index] = object[index].apply(self);
             }
-            if (typeof(object[pos]) == 'object' && ('toLiquid' in object[pos])) {
-              object = object[pos].toLiquid();
+            if ( object[index] != null && typeof(object[index]) === 'object' && object[index].toLiquid ) {
+              object = object[index].toLiquid();
             } else {
-              object = object[pos];
+              object = object[index];
             }
           }
           // Some special cases. If no key with the same name was found we interpret following calls
           // as commands and call them on the current object if it exists
-          else if( object && typeof(object[part]) == 'function' && ['length', 'size', 'first', 'last'].include(part) ) {
+          else if ( object && typeof(object[part]) === 'function' && ['length', 'size', 'first', 'last'].include(part) ) {
             object = object[part].apply(part);
-            if('toLiquid' in object){ object = object.toLiquid(); }
+            if (object.toLiquid) {
+              object = object.toLiquid();
+            }
           }
           // No key was present with the desired value and it wasn't one of the directly supported
           // keywords either. The only thing we got left is to return nil
           else {
-            return object = null;
+            object = null;
           }
-          if(typeof(object) == 'object' && ('setContext' in object)){ object.setContext(self); }
+          if (object != null && typeof(object) === 'object' && object.setContext) {
+            object.setContext(self);
+          }
         }
       });
     }
     return object;
   },
 
-  addFilters: function(filters) {
+  addFilters: function (filters) {
     filters = filters.flatten();
-    filters.forEach(function(f){
-      if(typeof(f) != 'object'){ throw ("Expected object but got: "+ typeof(f)) }
+    filters.forEach(function (f){
+      if (typeof(f) !== 'object') {
+        // TODO : TypeError
+        throw ("Expected object but got: "+ typeof(f))
+      }
       this.strainer.addMethods(f);
     });
   },
 
-  handleError: function(err) {
+  handleError: function (err) {
     this.errors.push(err);
-    if(this.rethrowErrors){ throw err; }
+    if (this.rethrowErrors) {
+      throw err;
+    }
     return "Liquid error: " + (err.message ? err.message : (err.description ? err.description : err));
   }
 
