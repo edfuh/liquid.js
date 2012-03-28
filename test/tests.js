@@ -70,6 +70,17 @@ var Tests = (function() {
     '{{ collection[0].child }}': function() {
       assertEqual( 'Bob', render("{{ users[0].name }}", {users:[{name:'Bob'}]})  )
     },
+
+    'object.toLiquid': function() {
+      var rendered = render('{{ user }}', {
+        user : {
+          toLiquid : function () {
+            return 'Mark Wahlberg';
+          }
+        }
+      });
+      assertEqual('Mark Wahlberg', rendered);
+    },
     
     note2: "Testing filters...",
 
