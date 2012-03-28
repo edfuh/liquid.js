@@ -1,23 +1,23 @@
 // Standard Filters
 Liquid.Template.registerFilter({
 
-  size: function(iterable) {
+  size: function (iterable) {
     return (iterable['length']) ? iterable.length : 0;
   },
 
-  downcase: function(input) {
+  downcase: function (input) {
     return input.toString().toLowerCase();
   },
 
-  upcase: function(input) {
+  upcase: function (input) {
     return input.toString().toUpperCase();
   },
 
-  capitalize: function(input) {
+  capitalize: function (input) {
     return input.toString().capitalize();
   },
 
-  escape: function(input) {
+  escape: function (input) {
     // FIXME: properly HTML escape input...
     return input.toString()
                 .replace(/&/g, '&amp;')
@@ -28,90 +28,92 @@ Liquid.Template.registerFilter({
 
   h: this.escape,
 
-  truncate: function(input, length, string) {
-    if (!input){
+  truncate: function (input, length, string) {
+    if (!input) {
       return '';
     }
     length = length || 50;
-    string = string || "...";
+    string = string || '...';
 
     return (input.length > length ?
             input.slice(0, length) + string :
             input);
   },
 
-  truncatewords: function(input, words, string) {
-    if (!input || input == ''){
+  truncatewords: function (input, words, string) {
+    if (!input) {
       return '';
     }
-    words = parseInt(words || 15);
+    words = parseInt(words || 15, 10);
     string = string || '...';
-    var wordlist = input.toString().split(" "),
-        l = Math.max((words), 0);
-    return (wordlist.length > l) ? wordlist.slice(0,l).join(' ') + string : input;
+    var wordlist = input.toString().split(' '),
+        l = Math.max(words, 0);
+    return (wordlist.length > l) ? wordlist.slice(0, l).join(' ') + string : input;
   },
 
-  truncate_words: function(input, words, string) {
-    if (!input || input == ''){
-      return '';
-    }
-    words = parseInt(words || 15);
-    string = string || '...';
-    var wordlist = input.toString().split(" "),
-        l = Math.max((words), 0);
-    return (wordlist.length > l) ? wordlist.slice(0,l).join(' ') + string : input;
-  },
+  truncate_words: this.truncatewords,
 
-  strip_html: function(input) {
+  strip_html: function (input) {
     return input.toString().replace(/<.*?>/g, '');
   },
 
-  strip_newlines: function(input) {
-    return input.toString().replace(/\n/g, '')
+  strip_newlines: function (input) {
+    return input.toString().replace(/\n/g, '');
   },
 
-  join: function(input, separator) {
+  join: function (input, separator) {
     separator = separator || ' ';
     return input.join(separator);
   },
 
-  sort: function(input) {
+  sort: function (input) {
     return input.sort();
   },
 
-  reverse: function(input) {
+  reverse: function (input) {
     return input.reverse();
   },
 
-  replace: function(input, string, replacement) {
+  replace: function (input, string, replacement) {
     replacement = replacement || '';
     return input.toString().replace(new RegExp(string, 'g'), replacement);
   },
 
-  replace_first: function(input, string, replacement) {
+  replace_first: function (input, string, replacement) {
     replacement = replacement || '';
-    return input.toString().replace(new RegExp(string, ""), replacement);
+    return input.toString().replace(new RegExp(string, ''), replacement);
   },
 
-  newline_to_br: function(input) {
-    return input.toString().replace(/\n/g, "<br/>\n");
+  newline_to_br: function (input) {
+    return input.toString().replace(/\n/g, '<br/>\n');
   },
 
-  date: function(input, format) {
+  date: function (input, format) {
     var date;
-    if( input instanceof Date ){ date = input; }
-    if(!(date instanceof Date) && input == 'now'){ date = new Date(); }
-    if(!(date instanceof Date)){ date = new Date(input); }
-    if(!(date instanceof Date)){ date = new Date(Date.parse(input));}
-    if(!(date instanceof Date)){ return input; } // Punt
+    if (input instanceof Date) {
+      date = input;
+    }
+    if (!(date instanceof Date) && input == 'now') {
+      date = new Date();
+    }
+    if (!(date instanceof Date)) {
+      date = new Date(input);
+    }
+    if (!(date instanceof Date)) {
+      date = new Date(Date.parse(input));
+    }
+    // Eff it, I tried
+    if (!(date instanceof Date)) {
+      return input;
+    }
     return date.strftime(format);
   },
 
-  first: function(input) {
+  first: function (input) {
     return input[0];
   },
 
-  last: function(input) {
-    return input[input.length -1];
+  last: function (input) {
+    return input[input.length - 1];
   }
 });

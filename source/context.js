@@ -51,7 +51,7 @@ Liquid.Context = Class.extend({
   },
 
   invoke: function (method, args) {
-    if ( this.strainer.respondTo(method) ) {
+    if (this.strainer.respondTo(method)) {
       // console.log('found method '+ method);
       // console.log("INVOKE: "+ method);
       // console.log('args', args);
@@ -65,71 +65,87 @@ Liquid.Context = Class.extend({
 
   resolve: function (key) {
     switch (key) {
-      case null:
-      case 'nil':
-      case 'null':
-      case '':
-        return null;
+    case null:
+    case 'nil':
+    case 'null':
+    case '':
+      return null;
 
-      case 'true':
-        return true;
+    case 'true':
+      return true;
 
-      case 'false':
-        return false;
+    case 'false':
+      return false;
 
-      // Not sure what to do with (what would be) Symbols
-      case 'blank':
-      case 'empty':
-        return '';
+    // Not sure what to do with (what would be) Symbols
+    case 'blank':
+    case 'empty':
+      return '';
 
-      default:
-        if ((/^'(.*)'$/).test(key))      // Single quoted strings
-          { return key.replace(/^'(.*)'$/, '$1'); }
+    default:
+      // Single quoted strings
+      if ((/^'(.*)'$/).test(key)) {
+        return key.replace(/^'(.*)'$/, '$1');
+      }
+      // Double quoted strings
+      else if ((/^"(.*)"$/).test(key)) {
+        return key.replace(/^"(.*)"$/, '$1');
+      }
+      // Integer...
+      else if ((/^(\d+)$/).test(key)) {
+        return parseInt( key.replace(/^(\d+)$/ , '$1'), 10 );
+      }
+      // Float...
+      else if ((/^(\d[\d\.]+)$/).test(key)) {
+        return parseFloat( key.replace(/^(\d[\d\.]+)$/, '$1') );
+      }
+      // Ranges
+      // JavaScript doesn't have native support for those, so I turn 'em
+      // into an array of integers...
+      else if ((/^\((\S+)\.\.(\S+)\)$/).test(key)) {
+        var range = key.match(/^\((\S+)\.\.(\S+)\)$/),
+            left  = parseInt(range[1], 10),
+            right = parseInt(range[2], 10),
+            arr   = [],
+            limit;
+        // Check if left and right are NaN, if so try as characters
+        if (isNaN(left) || isNaN(right)) {
+          // TODO Add in error checking to make sure ranges are single
+          // character, A-Z or a-z, etc.
+          left = range[1].charCodeAt(0);
+          right = range[2].charCodeAt(0);
 
-        else if ((/^"(.*)"$/).test(key)) // Double quoted strings
-          { return key.replace(/^"(.*)"$/, '$1'); }
-
-        else if ((/^(\d+)$/).test(key)) // Integer...
-          { return parseInt( key.replace(/^(\d+)$/ , '$1') ); }
-
-        else if ((/^(\d[\d\.]+)$/).test(key)) // Float...
-          { return parseFloat( key.replace(/^(\d[\d\.]+)$/, '$1') ); }
-
-        else if ((/^\((\S+)\.\.(\S+)\)$/).test(key)) {// Ranges
-          // JavaScript doesn't have native support for those, so I turn 'em
-          // into an array of integers...
-          var range = key.match(/^\((\S+)\.\.(\S+)\)$/),
-              left  = parseInt(range[1]),
-              right = parseInt(range[2]),
-              arr   = [];
-          // Check if left and right are NaN, if so try as characters
-          if (isNaN(left) || isNaN(right)) {
-            // TODO Add in error checking to make sure ranges are single
-            // character, A-Z or a-z, etc.
-            left = range[1].charCodeAt(0);
-            right = range[2].charCodeAt(0);
-
-            var limit = right - left + 1;
-            for (var i = 0; i < limit; i++) arr.push(String.fromCharCode(i + left));
-          } else { // okay to make array
-            var limit = right - left + 1;
-            for (var i = 0; i < limit; i++) arr.push(i + left);
+          limit = right - left + 1;
+          for (var i = 0; i < limit; i++) {
+            arr.push(String.fromCharCode(i + left));
           }
-          return arr;
-        } else {
-          var result = this.variable(key);
-          // console.log("Finding variable: "+ key)
-          // console.log(Object.inspect(result))
-          return result;
+        } else { // okay to make array
+          limit = right - left + 1;
+          for (var i = 0; i < limit; i++) {
+            arr.push(i + left);
+          }
         }
+        return arr;
+      } else {
+        var result = this.variable(key);
+        // console.log("Finding variable: "+ key)
+        // console.log(Object.inspect(result))
+        return result;
+      }
     }
   },
 
   findVariable: function (key) {
-    for (var i = 0; i < this.scopes.length; i++) {
-      var scope = this.scopes[i];
-      if ( scope && !!scope[key] ) {
-        var variable = scope[key];
+    var
+      scope,
+      variable,
+      i,
+      scopesLength = this.scopes.length
+    ;
+    for (i = 0; i < scopesLength; i++) {
+      scope = this.scopes[i];
+      if (scope && !!scope[key]) {
+        variable = scope[key];
         if (typeof(variable) === 'function') {
           variable = variable.apply(this);
           scope[key] = variable;
@@ -156,11 +172,13 @@ Liquid.Context = Class.extend({
       return null;
     }
 
-    var self        = this,
-        parts       = markup.match( /\[[^\]]+\]|(?:[\w\-]\??)+/g ),
-        firstPart   = parts.shift(),
-        squareMatch = firstPart.match(/^\[(.*)\]$/),
-        object;
+    var
+      self        = this,
+      parts       = markup.match( /\[[^\]]+\]|(?:[\w\-]\??)+/g ),
+      firstPart   = parts.shift(),
+      squareMatch = firstPart.match(/^\[(.*)\]$/),
+      object
+    ;
 
     if (squareMatch) {
       firstPart = this.resolve( squareMatch[1] );
@@ -176,7 +194,8 @@ Liquid.Context = Class.extend({
         if (squareMatch) {
           var part = self.resolve( squareMatch[1] );
           if (typeof(object[part]) === 'function') {
-            object[part] = object[part].apply(this); // Array?
+            // Array?
+            object[part] = object[part].apply(this);
           }
           object = object[part];
           if (object != null && typeof(object) === 'object' && object.toLiquid) {
@@ -185,8 +204,8 @@ Liquid.Context = Class.extend({
         } else {
           // Hash
           if ( typeof(object) === 'object' && (part in object) ) {
-            // if its a proc we will replace the entry in the hash table with the proc
             var res = object[part];
+            // if its a closure we will replace the entry in the hash table with the result
             if (typeof(res) === 'function') {
               res = object[part] = res.apply(self);
             }
@@ -232,10 +251,10 @@ Liquid.Context = Class.extend({
 
   addFilters: function (filters) {
     filters = filters.flatten();
-    filters.forEach(function (f){
-      if (typeof(f) !== 'object') {
+    filters.forEach(function (f) {
+      if (typeof f !== 'object') {
         // TODO : TypeError
-        throw ("Expected object but got: "+ typeof(f))
+        throw 'Expected object but got: ' + typeof f;
       }
       this.strainer.addMethods(f);
     });
