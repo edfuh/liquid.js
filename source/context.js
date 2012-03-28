@@ -140,9 +140,9 @@ Liquid.Context = Class.extend({
       scope,
       variable,
       i,
-      scopesLength = this.scopes.length
+      numScopes = this.scopes.length
     ;
-    for (i = 0; i < scopesLength; i++) {
+    for (i = 0; i < numScopes; i++) {
       scope = this.scopes[i];
       if (scope && !!scope[key]) {
         variable = scope[key];
@@ -155,7 +155,7 @@ Liquid.Context = Class.extend({
             variable = variable.toLiquid();
           }
           if (variable.setContext) {
-            variable.setContext(self);
+            variable.setContext(this);
           }
         }
         return variable;
