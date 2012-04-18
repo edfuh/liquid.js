@@ -1,4 +1,3 @@
-
 var Tests = (function() {
   // helper functions...
   function render(src, ctx) {
@@ -19,56 +18,56 @@ var Tests = (function() {
     },
 
     "Plain text pass-thru": function() {
-      assertEqual( 'plain text', render('plain text')  )
+      assertEqual( 'plain text', render('plain text')  );
     },
 
     note1: "Testing variables...",
 
     "{{ 'string literal' }}": function() {
-      assertEqual( 'string literal', render('{{"string literal"}}')  )
-      assertEqual( 'string literal', render('{{ "string literal" }}')  )
-      assertEqual( 'string literal', render("{{'string literal'}}")  )
-      assertEqual( 'string literal', render("{{ 'string literal' }}")  )
-      assertEqual( 'string "literal"', render("{{'string \"literal\"'}}")  )
-      assertEqual( 'string "literal"', render("{{ 'string \"literal\"' }}")  )
+      assertEqual( 'string literal', render('{{"string literal"}}')  );
+      assertEqual( 'string literal', render('{{ "string literal" }}')  );
+      assertEqual( 'string literal', render("{{'string literal'}}")  );
+      assertEqual( 'string literal', render("{{ 'string literal' }}")  );
+      assertEqual( 'string "literal"', render("{{'string \"literal\"'}}")  );
+      assertEqual( 'string "literal"', render("{{ 'string \"literal\"' }}")  );
     },
 
     "{{ 10 }}": function() {
-      assertEqual( '10', render('{{10}}')  )
-      assertEqual( '10', render('{{ 10 }}')  )
+      assertEqual( '10', render('{{10}}')  );
+      assertEqual( '10', render('{{ 10 }}')  );
     },
 
     "{{ 5.5 }}": function() {
-      assertEqual( '5.5', render('{{5.5}}')  )
-      assertEqual( '5.5', render('{{ 5.5 }}')  )
+      assertEqual( '5.5', render('{{5.5}}')  );
+      assertEqual( '5.5', render('{{ 5.5 }}')  );
     },
 
     "{{ (1..5) }}": function() {
-      assertEqual( '1,2,3,4,5', render('{{(1..5)}}')  )
-      assertEqual( '1,2,3,4,5', render('{{ (1..5) }}')  )
+      assertEqual( '1,2,3,4,5', render('{{(1..5)}}')  );
+      assertEqual( '1,2,3,4,5', render('{{ (1..5) }}')  );
     },
     "{{ (a..e) }}": function() {
-      assertEqual( 'a,b,c,d,e', render('{{(a..e)}}')  )
+      assertEqual( 'a,b,c,d,e', render('{{(a..e)}}')  );
     },
 
     '{{ varname }}': function() {
-      assertEqual( 'Bob', render("{{ user }}", {user:'Bob'})  )
+      assertEqual( 'Bob', render("{{ user }}", {user:'Bob'})  );
     },
 
     '{{ parent.child }}': function() {
-      assertEqual( 'Bob', render("{{ user.name }}", {user:{ name:'Bob' }})  )
+      assertEqual( 'Bob', render("{{ user.name }}", {user:{ name:'Bob' }})  );
     },
 
     'Empty string if child is undefined': function() {
-      assertEqual( '', render("{{ user.name }}", {user:{ fullname:'Bob' }})  )
+      assertEqual( '', render("{{ user.name }}", {user:{ fullname:'Bob' }})  );
     },
 
     '{{ collection[0] }}': function() {
-      assertEqual( 'Bob', render("{{ users[0] }}", {users:['Bob']})  )
+      assertEqual( 'Bob', render("{{ users[0] }}", {users:['Bob']})  );
     },
 
     '{{ collection[0].child }}': function() {
-      assertEqual( 'Bob', render("{{ users[0].name }}", {users:[{name:'Bob'}]})  )
+      assertEqual( 'Bob', render("{{ users[0].name }}", {users:[{name:'Bob'}]})  );
     },
 
     'object.toLiquid': function() {
@@ -85,40 +84,40 @@ var Tests = (function() {
     note2: "Testing filters...",
 
     '{{ string | size }}': function() {
-      assertEqual( '3', render("{{user|size}}", {user:'Bob'})  )
-      assertEqual( '3', render("{{ user | size }}", {user:'Bob'})  )
+      assertEqual( '3', render("{{user|size}}", {user:'Bob'})  );
+      assertEqual( '3', render("{{ user | size }}", {user:'Bob'})  );
     },
 
     '{{ collection | size }}': function() {
-      assertEqual( '3', render("{{user|size}}", {user:['','','']})  )
-      assertEqual( '3', render("{{ user | size }}", {user:['','','']})  )
+      assertEqual( '3', render("{{user|size}}", {user:['','','']})  );
+      assertEqual( '3', render("{{ user | size }}", {user:['','','']})  );
     },
 
     '{{ string | upcase }}': function() {
-      assertEqual( 'BOB', render("{{user|upcase}}", {user:'Bob'})  )
-      assertEqual( 'BOB', render("{{ user | upcase }}", {user:'Bob'})  )
+      assertEqual( 'BOB', render("{{user|upcase}}", {user:'Bob'})  );
+      assertEqual( 'BOB', render("{{ user | upcase }}", {user:'Bob'})  );
     },
 
     '{{ string | downcase }}': function() {
-      assertEqual( 'bob', render("{{user|downcase}}", {user:'Bob'})  )
-      assertEqual( 'bob', render("{{ user | downcase }}", {user:'Bob'})  )
+      assertEqual( 'bob', render("{{user|downcase}}", {user:'Bob'})  );
+      assertEqual( 'bob', render("{{ user | downcase }}", {user:'Bob'})  );
     },
 
     '{{ string | capitalize }}': function() {
-      assertEqual( 'Bob', render("{{user|capitalize}}", {user:'bob'})  )
-      assertEqual( 'Bob', render("{{ user | capitalize }}", {user:'bob'})  )
+      assertEqual( 'Bob', render("{{user|capitalize}}", {user:'bob'})  );
+      assertEqual( 'Bob', render("{{ user | capitalize }}", {user:'bob'})  );
     },
 
     '{{ string | escape }}': function() {
-      assertEqual( '&lt;br/&gt;', render("{{'<br/>'|escape}}")  )
-      assertEqual( '&lt;br/&gt;', render("{{ '<br/>' | escape }}")  )
-      assertEqual( 'this &amp; &quot;that&quot;', render("{{ 'this & \"that\"' | escape }}")  )
+      assertEqual( '&lt;br/&gt;', render("{{'<br/>'|escape}}")  );
+      assertEqual( '&lt;br/&gt;', render("{{ '<br/>' | escape }}")  );
+      assertEqual( 'this &amp; &quot;that&quot;', render("{{ 'this & \"that\"' | escape }}")  );
     },
 
     '{{ string | h }}': function() {
-      assertEqual( '&lt;br/&gt;', render("{{'<br/>'|escape}}")  )
-      assertEqual( '&lt;br/&gt;', render("{{ '<br/>' | escape }}")  )
-      assertEqual( 'this &amp; &quot;that&quot;', render("{{ 'this & \"that\"' | escape }}")  )
+      assertEqual( '&lt;br/&gt;', render("{{'<br/>'|escape}}")  );
+      assertEqual( '&lt;br/&gt;', render("{{ '<br/>' | escape }}")  );
+      assertEqual( 'this &amp; &quot;that&quot;', render("{{ 'this & \"that\"' | escape }}")  );
     },
 
     '{{ string | truncate }}': function() {
@@ -133,16 +132,16 @@ var Tests = (function() {
     },
 
     '{{ string | truncate:2 }}': function() {
-      assertEqual( 'Bo...', render("{{user|truncate:2}}", {user:'Bob'})  )
-      assertEqual( 'Bo...', render("{{ user | truncate:2 }}", {user:'Bob'})  )
-      assertEqual( 'Bo...', render("{{ user | truncate: 2 }}", {user:'Bob'})  )
+      assertEqual( 'Bo...', render("{{user|truncate:2}}", {user:'Bob'})  );
+      assertEqual( 'Bo...', render("{{ user | truncate:2 }}", {user:'Bob'})  );
+      assertEqual( 'Bo...', render("{{ user | truncate: 2 }}", {user:'Bob'})  );
     },
 
     "{{ string | truncate:1,'-' }}": function() {
-      assertEqual( 'B-', render("{{user|truncate:1,'-'}}", {user:'Bob'})  )
-      assertEqual( 'B-', render("{{ user | truncate:1,'-' }}", {user:'Bob'})  )
-      assertEqual( 'B-', render("{{ user | truncate: 1,'-' }}", {user:'Bob'})  )
-      assertEqual( 'B-', render("{{ user | truncate: 1, '-' }}", {user:'Bob'})  )
+      assertEqual( 'B-', render("{{user|truncate:1,'-'}}", {user:'Bob'})  );
+      assertEqual( 'B-', render("{{ user | truncate:1,'-' }}", {user:'Bob'})  );
+      assertEqual( 'B-', render("{{ user | truncate: 1,'-' }}", {user:'Bob'})  );
+      assertEqual( 'B-', render("{{ user | truncate: 1, '-' }}", {user:'Bob'})  );
     },
 
     '{{ string | truncatewords }}': function() {
@@ -236,8 +235,8 @@ var Tests = (function() {
     },
 
     "{{ string | newline_to_br }}": function() {
-      var src = "Hello,\nHow are you?\nI'm glad to here it."
-      var exp = "Hello,<br/>\nHow are you?<br/>\nI'm glad to here it."
+      var src = "Hello,\nHow are you?\nI'm glad to here it.";
+      var exp = "Hello,<br/>\nHow are you?<br/>\nI'm glad to here it.";
       assertEqual( exp, render("{{src|newline_to_br}}", {src:src}) );
       assertEqual( exp, render("{{ src | newline_to_br }}", {src:src}) );
     },
@@ -312,7 +311,7 @@ var Tests = (function() {
       assertEqual(".1,2,3.", tmpl.render());
 
       // Also make sure that nothing leaks out...
-      var tmpl = Liquid.parse("{% assign myVar = 'foo' %}");
+      tmpl = Liquid.parse("{% assign myVar = 'foo' %}");
       assertEqual('', tmpl.render());
     },
 
@@ -330,30 +329,30 @@ var Tests = (function() {
     },
 
     "{% case conditionLeft %} {% when conditionRight %} {% else %} {% endcase %}": function() {
-      var src = "{% case testVar %}\n\
-{% when 1 %} One!\
-{% when 2 %} Two!\
-{% when 'test' %} Test!\
-{% else %} Got me{% endcase %}",
+      var src = "{% case testVar %}\n" +
+                "{% when 1 %} One!" +
+                "{% when 2 %} Two!" +
+                "{% when 'test' %} Test!" +
+                "{% else %} Got me{% endcase %}",
           tmpl = Liquid.parse(src);
 
-      assertEqual(" One!", tmpl.render({ testVar:1 }));
-      assertEqual(" Two!", tmpl.render({ testVar:2 }));
-      assertEqual(" Test!", tmpl.render({ testVar:'test' }));
-      assertEqual(" Got me", tmpl.render({ testVar:null }));
+      assertEqual(" One!", tmpl.render({ testVar : 1 }));
+      assertEqual(" Two!", tmpl.render({ testVar : 2 }));
+      assertEqual(" Test!", tmpl.render({ testVar : 'test' }));
+      assertEqual(" Got me", tmpl.render({ testVar : null }));
       assertEqual(" Got me", tmpl.render({ }));
     },
 
     "{% comment %} content {% endcomment %}": function() {
-      assertEqual("", render("{% comment %} I'm a comment! {% endcomment %}"))
+      assertEqual("", render("{% comment %} I'm a comment! {% endcomment %}"));
     },
 
     "{% cycle 'odd', 'even' %}": function() {
       var src = "{% cycle 'odd', 'even' %} {% cycle 'odd', 'even' %} {% cycle 'odd', 'even' %}";
       assertEqual('odd even odd', render(src));
 
-      var src = "{% cycle 'odd', 'even' %}{% cycle 'odd', 'even' %}{% cycle 'odd', 'even' %}";
-      assertEqual('oddevenodd', render(src));
+      var src2 = "{% cycle 'odd', 'even' %}{% cycle 'odd', 'even' %}{% cycle 'odd', 'even' %}";
+      assertEqual('oddevenodd', render(src2));
     },
 
     "{% for item in collection %}{% endfor %}": function() {
@@ -366,21 +365,21 @@ var Tests = (function() {
     },
 
     "{% if conditions %}{% else %}{% endif %}": function() {
-      assertEqual("TRUE", render("{% if true %}TRUE{% endif %}"))
-      assertEqual("TRUE", render("{% if 1 == 1 %}TRUE{% endif %}"))
-      assertEqual("",     render("{% if 1 != 1 %}TRUE{% endif %}"))
-      assertEqual("",     render("{% if 1 > 1 %}TRUE{% endif %}"))
-      assertEqual("",     render("{% if 1 < 1 %}TRUE{% endif %}"))
-      assertEqual("TRUE", render("{% if 1 <= 1 %}TRUE{% endif %}"))
-      assertEqual("TRUE", render("{% if 1 >= 1 %}TRUE{% endif %}"))
+      assertEqual("TRUE", render("{% if true %}TRUE{% endif %}"));
+      assertEqual("TRUE", render("{% if 1 == 1 %}TRUE{% endif %}"));
+      assertEqual("",     render("{% if 1 != 1 %}TRUE{% endif %}"));
+      assertEqual("",     render("{% if 1 > 1 %}TRUE{% endif %}"));
+      assertEqual("",     render("{% if 1 < 1 %}TRUE{% endif %}"));
+      assertEqual("TRUE", render("{% if 1 <= 1 %}TRUE{% endif %}"));
+      assertEqual("TRUE", render("{% if 1 >= 1 %}TRUE{% endif %}"));
       // Testing else as well...
-      assertEqual("TRUE", render("{% if true %}TRUE{% else %}FALSE{% endif %}"))
-      assertEqual("TRUE", render("{% if 1 == 1 %}TRUE{% else %}FALSE{% endif %}"))
-      assertEqual("FALSE",render("{% if 1 != 1 %}TRUE{% else %}FALSE{% endif %}"))
-      assertEqual("FALSE",render("{% if 1 > 1 %}TRUE{% else %}FALSE{% endif %}"))
-      assertEqual("FALSE",render("{% if 1 < 1 %}TRUE{% else %}FALSE{% endif %}"))
-      assertEqual("TRUE", render("{% if 1 <= 1 %}TRUE{% else %}FALSE{% endif %}"))
-      assertEqual("TRUE", render("{% if 1 >= 1 %}TRUE{% else %}FALSE{% endif %}"))
+      assertEqual("TRUE", render("{% if true %}TRUE{% else %}FALSE{% endif %}"));
+      assertEqual("TRUE", render("{% if 1 == 1 %}TRUE{% else %}FALSE{% endif %}"));
+      assertEqual("FALSE",render("{% if 1 != 1 %}TRUE{% else %}FALSE{% endif %}"));
+      assertEqual("FALSE",render("{% if 1 > 1 %}TRUE{% else %}FALSE{% endif %}"));
+      assertEqual("FALSE",render("{% if 1 < 1 %}TRUE{% else %}FALSE{% endif %}"));
+      assertEqual("TRUE", render("{% if 1 <= 1 %}TRUE{% else %}FALSE{% endif %}"));
+      assertEqual("TRUE", render("{% if 1 >= 1 %}TRUE{% else %}FALSE{% endif %}"));
     },
 
     '{% if hasKey || hasValue || contains %}' : function () {
@@ -389,13 +388,13 @@ var Tests = (function() {
         dog : false,
         fish : true
       };
-      assertEqual('TRUE', render("{% if test hasKey 'dog' %}TRUE{% else %}FALSE{% endif %}", {test : obj}))
-      assertEqual('FALSE', render("{% if test hasValue 'nonvalue' %}TRUE{% else %}FALSE{% endif %}", {test : obj}))
-      assertEqual('TRUE', render("{% if test hasValue true %}TRUE{% else %}FALSE{% endif %}", {test : obj}))
+      assertEqual('TRUE', render("{% if test hasKey 'dog' %}TRUE{% else %}FALSE{% endif %}", {test : obj}));
+      assertEqual('FALSE', render("{% if test hasValue 'nonvalue' %}TRUE{% else %}FALSE{% endif %}", {test : obj}));
+      assertEqual('TRUE', render("{% if test hasValue true %}TRUE{% else %}FALSE{% endif %}", {test : obj}));
 
       // TODO add contains for string
       //assertEqual('TRUE', render("{% if test contains 'bob' %}TRUE{% else %}FALSE{% endif %}", {test : '---00000000bob000----0-00-'}))
-      assertEqual('TRUE', render("{% if test contains 'bob' %}TRUE{% else %}FALSE{% endif %}", {test : [1, 2, 3, 'bob']}))
+      assertEqual('TRUE', render("{% if test contains 'bob' %}TRUE{% else %}FALSE{% endif %}", {test : [1, 2, 3, 'bob']}));
     },
 
     "{% ifchanged %}{% endifchanged %}": function() {
@@ -408,35 +407,35 @@ var Tests = (function() {
           return "simple INCLUDED!";
         else
           return "{{ data }} INCLUDED!";
-      }
-      assertEqual("simple INCLUDED!", render("{% include 'simple' %}"))
-      assertEqual("Data INCLUDED!", render("{% include 'variable' with data:'Data' %}"))
+      };
+      assertEqual("simple INCLUDED!", render("{% include 'simple' %}"));
+      assertEqual("Data INCLUDED!", render("{% include 'variable' with data:'Data' %}"));
     },
 
     "{% unless conditions %}{% else %}{% endunless %}": function() {
-      assertEqual("",     render("{% unless true %}TRUE{% endunless %}"))
-      assertEqual("",     render("{% unless 1 == 1 %}TRUE{% endunless %}"))
-      assertEqual("TRUE", render("{% unless 1 != 1 %}TRUE{% endunless %}"))
-      assertEqual("TRUE", render("{% unless 1 > 1 %}TRUE{% endunless %}"))
-      assertEqual("TRUE", render("{% unless 1 < 1 %}TRUE{% endunless %}"))
-      assertEqual("",     render("{% unless 1 <= 1 %}TRUE{% endunless %}"))
-      assertEqual("",     render("{% unless 1 >= 1 %}TRUE{% endunless %}"))
+      assertEqual("",     render("{% unless true %}TRUE{% endunless %}"));
+      assertEqual("",     render("{% unless 1 == 1 %}TRUE{% endunless %}"));
+      assertEqual("TRUE", render("{% unless 1 != 1 %}TRUE{% endunless %}"));
+      assertEqual("TRUE", render("{% unless 1 > 1 %}TRUE{% endunless %}"));
+      assertEqual("TRUE", render("{% unless 1 < 1 %}TRUE{% endunless %}"));
+      assertEqual("",     render("{% unless 1 <= 1 %}TRUE{% endunless %}"));
+      assertEqual("",     render("{% unless 1 >= 1 %}TRUE{% endunless %}"));
       // Testing else as well...
-      assertEqual("FALSE", render("{% unless true %}TRUE{% else %}FALSE{% endunless %}"))
-      assertEqual("FALSE", render("{% unless 1 == 1 %}TRUE{% else %}FALSE{% endunless %}"))
-      assertEqual("TRUE",  render("{% unless 1 != 1 %}TRUE{% else %}FALSE{% endunless %}"))
-      assertEqual("TRUE",  render("{% unless 1 > 1 %}TRUE{% else %}FALSE{% endunless %}"))
-      assertEqual("TRUE",  render("{% unless 1 < 1 %}TRUE{% else %}FALSE{% endunless %}"))
-      assertEqual("FALSE", render("{% unless 1 <= 1 %}TRUE{% else %}FALSE{% endunless %}"))
-      assertEqual("FALSE", render("{% unless 1 >= 1 %}TRUE{% else %}FALSE{% endunless %}"))
+      assertEqual("FALSE", render("{% unless true %}TRUE{% else %}FALSE{% endunless %}"));
+      assertEqual("FALSE", render("{% unless 1 == 1 %}TRUE{% else %}FALSE{% endunless %}"));
+      assertEqual("TRUE",  render("{% unless 1 != 1 %}TRUE{% else %}FALSE{% endunless %}"));
+      assertEqual("TRUE",  render("{% unless 1 > 1 %}TRUE{% else %}FALSE{% endunless %}"));
+      assertEqual("TRUE",  render("{% unless 1 < 1 %}TRUE{% else %}FALSE{% endunless %}"));
+      assertEqual("FALSE", render("{% unless 1 <= 1 %}TRUE{% else %}FALSE{% endunless %}"));
+      assertEqual("FALSE", render("{% unless 1 >= 1 %}TRUE{% else %}FALSE{% endunless %}"));
     },
 
     note4: "Testing context...",
 
     "{{ collection['missing_key'].value }}": function() {
       // TODO Consider using a Context object directly instead, calling variable on it directly
-      assertEqual("", render("{{ collection['missing_key'].value }}"))
-      assertEqual("", render("{{ collection['missing_key'].value }}", {collection: {}}))
+      assertEqual("", render("{{ collection['missing_key'].value }}"));
+      assertEqual("", render("{{ collection['missing_key'].value }}", {collection: {}}));
     }
-  }
+  };
 })();
