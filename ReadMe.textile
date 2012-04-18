@@ -69,5 +69,5 @@ h3. Todo
 
 * Add full Node support
 * Look at the Object extensions and consider making a Liquid.Hash class similar to Prototype.
-* Replace JSMin with Uglify
+* Replace YUI with Uglify
 * Use grunt instead of rake
