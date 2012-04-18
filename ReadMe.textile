@@ -18,7 +18,7 @@ Currently the js files are not checked under source control since they are gener
 
 h2. Differences
 
-# Ranges. JavaScript doesn't really have Ranges like Ruby does. So when Liquid.js comes across a range "(1..5)", it creates an Array with the values 1 through 5. In addition ranges like (a..z) should work.
+# Ranges. JavaScript doesn't have Ranges like Ruby does. So when Liquid.js comes across a range "(1..5)", it creates an Array with the values 1 through 5. In addition ranges like (a..z) should work.
 # 'replace' and 'replace_first' filters build RegExps from the input, so you can actually define a regexp to use in your replacement.
 # 'include' tag. By default, this will return a Liquid error (but not an exception). To use the 'include' tag, you'll need to implement your own 'filesystem' support. Which, in Liquid.js, just means you override the Liquid.readTemplateFile function to suit your own needs. Here's an example:
 
@@ -45,7 +45,8 @@ h2. Differences
 <!-- Makes for pretty good inline template storage.  -->
 <script type="text/liquid" id="myOtherTemplate">
   Hello, {{ current_user }}!
-</script></pre>
+</script>
+</pre>
 
 h2. Known Issues
 
@@ -56,16 +57,17 @@ h2. References:
 
 * "http://wiki.shopify.com/UsingLiquid":http://wiki.shopify.com/UsingLiquid
 
-h2. Development
-# Fork the project on github.
-# Follow the installation steps with your repository.
-# Load the test/liquid-tests.html file to execute the tests; i.e. in a web browser load 'file:///home/username/projects/liquid.js/test/liquid-tests.html'.
-# Load the test/liquid-console.html to debug specific templates or test scenarios; i.e. in a web browser load 'file:///home/username/projects/liquid.js/test/liquid-tests.html'.
-# NOTE: It is recommended to use Chrome or Firefox (with Firebug) for development so you can see javascript errors in detail.
+h2. Contributing
+# Fork project
+# Make changes
+# Add tests
+# Pull request
+# ????
+# Profit!!!!
 
 h3. Todo
 
-* Add Node tests
-* Add Rhino support for console-based testing?
+* Add full Node support
 * Look at the Object extensions and consider making a Liquid.Hash class similar to Prototype.
-* Look into making into a gem or something that has the auto-compiled JS file in the workflow somewhere.
+* Replace JSMin with Uglify
+* Use grunt instead of rake
