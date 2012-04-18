@@ -302,7 +302,7 @@ Liquid.Template.registerTag( 'for', Liquid.Block.extend({
 
 Liquid.Template.registerTag( 'if', Liquid.Block.extend({
 
-  tagSyntax: /("[^"]+"|'[^']+'|[^\s,|]+)\s*([=!<>a-z_]+)?\s*("[^"]+"|'[^']+'|[^\s,|]+)?/,
+  tagSyntax: /("[^"]+"|'[^']+'|[^\s,|]+)\s*([=!<>a-z_]+)?\s*("[^"]+"|'[^']+'|[^\s,|]+)?/i,
 
   init: function(tag, markup, tokens) {
     this.nodelist = [];
@@ -342,11 +342,13 @@ Liquid.Template.registerTag( 'if', Liquid.Block.extend({
       var expressions = markup.split(/\b(and|or)\b/).reverse(),
           expMatches  = expressions.shift().match( this.tagSyntax );
 
-      if(!expMatches){ throw ("Syntax Error in tag '"+ tag +"' - Valid syntax: "+ tag +" [expression]"); }
+      if (!expMatches){
+        throw ("Syntax Error in tag '"+ tag +"' - Valid syntax: "+ tag +" [expression]");
+      }
 
       var condition = new Liquid.Condition(expMatches[1], expMatches[2], expMatches[3]);
 
-      while(expressions.length > 0) {
+      while (expressions.length > 0) {
         var operator = expressions.shift(),
             expMatches  = expressions.shift().match( this.tagSyntax );
         if(!expMatches){ throw ("Syntax Error in tag '"+ tag +"' - Valid syntax: "+ tag +" [expression]"); }

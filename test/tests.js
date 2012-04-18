@@ -383,6 +383,21 @@ var Tests = (function() {
       assertEqual("TRUE", render("{% if 1 >= 1 %}TRUE{% else %}FALSE{% endif %}"))
     },
 
+    '{% if hasKey || hasValue || contains %}' : function () {
+      var obj = {
+        cat : true,
+        dog : false,
+        fish : true
+      };
+      assertEqual('TRUE', render("{% if test hasKey 'dog' %}TRUE{% else %}FALSE{% endif %}", {test : obj}))
+      assertEqual('FALSE', render("{% if test hasValue 'nonvalue' %}TRUE{% else %}FALSE{% endif %}", {test : obj}))
+      assertEqual('TRUE', render("{% if test hasValue true %}TRUE{% else %}FALSE{% endif %}", {test : obj}))
+
+      // TODO add contains for string
+      //assertEqual('TRUE', render("{% if test contains 'bob' %}TRUE{% else %}FALSE{% endif %}", {test : '---00000000bob000----0-00-'}))
+      assertEqual('TRUE', render("{% if test contains 'bob' %}TRUE{% else %}FALSE{% endif %}", {test : [1, 2, 3, 'bob']}))
+    },
+
     "{% ifchanged %}{% endifchanged %}": function() {
       assertEqual("12", render("{% for item in col %}{% ifchanged %}{{ item }}{% endifchanged %}{% endfor %}", {col:[1,1,1,2,2,2]}));
     },

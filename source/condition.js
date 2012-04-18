@@ -74,15 +74,22 @@ Liquid.Condition.operators = {
   '<=': function (l, r) { return (l <= r); },
   '>=': function (l, r) { return (l >= r); },
 
-  'contains': function (l, r) { return l.include(r); },
-  // HACK Apply from Liquid.extensions.object; extending Object sad.
-  //'hasKey': function (l, r) { return l.hasKey(r); }
-  'hasKey':   function (l, r) {
-    return Liquid.extensions.object.hasKey.call(l, r);
+  contains : function (l, r) {
+    return l.include(r);
+  },
+  hasKey : function (l, r) {
+    return l.hasOwnProperty(r);
   },
   //'hasValue': function (l, r) { return l.hasValue(r); }
-  'hasValue': function (l, r) {
-    return Liquid.extensions.object.hasValue.call(l, r);
+  hasValue : function (l, r) {
+    var p;
+    for (p in l) {
+      if (l[p] === r) {
+        return true;
+      }
+    }
+
+    return false;
   }
 };
 

@@ -150,27 +150,3 @@ Liquid.extensions.object.update = function (newObj) {
 //if (!Object.prototype.update) {
 //  Object.prototype.update = Liquid.extensions.object.update
 //}
-
-// Object.hasKey
-Liquid.extensions.object.hasKey = function (arg) {
-  return !!this[arg];
-};
-//if (!Object.prototype.hasKey) {
-//  Object.prototype.hasKey = Liquid.extensions.object.hasKey
-//}
-
-// Object.hasValue
-Liquid.extensions.object.hasValue = function (arg) {
-  var p;
-  for (p in this) {
-    if (this[p] == arg) {
-      return true;
-    }
-  }
-
-  return false;
-};
-//if (!Object.prototype.hasValue) {
-//  Object.prototype.hasValue = Liquid.extensions.object.hasValue
-//}
-
