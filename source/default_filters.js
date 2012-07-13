@@ -26,7 +26,9 @@ Liquid.Template.registerFilter({
                 .replace(/"/g, '&quot;');
   },
 
-  h: this.escape,
+  h: function () {
+    return this.escape.apply(this, arguments);
+  },
 
   truncate: function (input, length, string) {
     if (!input) {
