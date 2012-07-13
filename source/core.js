@@ -5,7 +5,7 @@
     exports.Liquid = factory();
   } else if (typeof define === 'function' && define.amd) {
     // AMD
-    define('liquid', [], factory);
+    define(factory);
   } else {
     // Browser globals
     root.Liquid = factory();
@@ -18,7 +18,7 @@
     version: '<%= VERSION %>',
 
     readTemplateFile: function(path) {
-      throw ("This liquid context does not allow includes.");
+      throw ('This liquid context does not allow includes.');
     },
 
     registerFilters: function(filters) {
