@@ -17,14 +17,6 @@
   indent:2,
   jquery:true
 */
-/*global
-  jQuery:false,
-  Storenvy:false,
-  Sea:false,
-  _:false,
-  define:false,
-  require:true
-*/
 /*
  strftime for Javascript
  Copyright (c) 2008, Philip S Tellis <philip@bluesmoon.info>

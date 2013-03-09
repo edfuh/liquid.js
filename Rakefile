@@ -1,30 +1,11 @@
 gem 'sprockets', '=1.0.2'
 
-desc "Test javascript in Adobe AIR... Required AIR SDK"
-task :test_air do
-  puts `adl test-app.xml`
-end
-
-desc "Test javascript in Rhino... Requires Java"
-task :test do
-  # Yeah, doesn't really work right yet
-  puts "Not working yet. But you can open test/liquid-tests.html in your browser..."
-  puts `java -jar test/env/js.jar test/env/test.harness.js`
-end
-
 desc "Compiles from source scripts into dist/liquid.js"
 task :build do
   puts "Building liquid.js..."
-  begin
-    require 'Sprockets'
-  rescue LoadError
-    puts "Build require sprockets:"
-    puts
-    puts "  gem install sprockets"
-    puts
-    exit(1)
-  end
-  
+
+  require 'Sprockets'
+
   secretary = Sprockets::Secretary.new(
     :asset_root   => "assets",
     :load_path    => ["source", "etc", "."],

@@ -1,6 +1,11 @@
 <html>
   <script src="../dist/liquid.js"></script>
   <script>
+
+    if (typeof Liquid == undefined) {
+      alert('Run `rake build` first');
+    }
+
     var TopUserDrop = Liquid.Drop.extend({
       name: function()  {
         return "Top User Name!!!"
